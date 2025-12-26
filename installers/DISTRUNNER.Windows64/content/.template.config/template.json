@@ -1,0 +1,8 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Your Company",
+    "classifications": [ "Tools", "Test", "Runner", "DISTRUNNER", "Distribute", "Parallel" ],
+    "identity": "DISTRUNNER.Windows64",
+    "name": "DISTRUNNER.Windows64",
+    "shortName": "DISTRUNNER-windows64"
+}

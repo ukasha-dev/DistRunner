@@ -1,0 +1,33 @@
+
+%USERPROFILE%\.dotnet\tools
+
+dotnet tool uninstall --global DISTRUNNERserver
+dotnet tool uninstall --global DISTRUNNER
+
+dotnet tool install --global --add-source ./nupkg DISTRUNNERserver
+dotnet tool install --global --add-source ./nupkg DISTRUNNER
+
+dotnet build --configuration=Release
+Get-ChildItem -File -Recurse | % {$_.LastWriteTime = (Get-Date)}
+dotnet pack --no-build --configuration=Release
+
+DISTRUNNER agent --tag="APIAgent" --server="http://127.0.0.1:89"
+
+DISTRUNNER setServerUrl --server="http://127.0.0.1:89"
+
+
+
+--tag="BELLA" --server="http:\\127.0.0.1:89"
+
+DISTRUNNER agent --tag="BELLA" --server="http:\\127.0.0.1:89"
+
+DISTRUNNER status --tag="BELLA" --serveр="http:\\127.0.0.1:89"
+
+DISTRUNNER dump --server="http:\\127.0.0.1:89"
+
+
+
+dotnet tool update --global DISTRUNNERserver
+
+TODO: copy plugins to DISTRUNNER\Plugins
+

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DistRunner - Distributed Test Runner Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">DistRunner</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="dashboard">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-page="agents">
+                <span class="nav-icon">🖥️</span>
+                <span>Test Agents</span>
+            </a>
+            <a href="#" class="nav-item" data-page="runs">
+                <span class="nav-icon">🧪</span>
+                <span>Test Runs</span>
+            </a>
+            <a href="#" class="nav-item" data-page="history">
+                <span class="nav-icon">📜</span>
+                <span>History</span>
+            </a>
+            <a href="#" class="nav-item" data-page="settings">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+            <a href="/swagger" class="nav-item" target="_blank">
+                <span class="nav-icon">📚</span>
+                <span>API Docs</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="server-status">
+                <span class="status-dot online"></span>
+                <span>Server Online</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <button class="menu-toggle" id="menuToggle">☰</button>
+            <h1 class="page-title" id="pageTitle">Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="refreshData()">
+                    <span class="btn-icon">🔄</span> Refresh
+                </button>
+                <div class="theme-toggle" onclick="toggleTheme()">🌙</div>
+            </div>
+        </header>
+
+        <!-- Dashboard Page -->
+        <div class="page active" id="page-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon green"><span>🖥️</span></div>
+                        <div class="stat-trend up">+12%</div>
+                    </div>
+                    <div class="stat-value" id="totalAgents">0</div>
+                    <div class="stat-label">Total Agents</div>
+                    <div class="stat-bar"><div class="stat-bar-fill green" style="width: 75%"></div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon blue"><span>✓</span></div>
+                        <div class="stat-trend up">Active</div>
+                    </div>
+                    <div class="stat-value" id="activeAgents">0</div>
+                    <div class="stat-label">Active Agents</div>
+                    <div class="stat-bar"><div class="stat-bar-fill blue" style="width: 60%"></div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon purple"><span>📊</span></div>
+                        <div class="stat-trend">Total</div>
+                    </div>
+                    <div class="stat-value" id="totalRuns">0</div>
+                    <div class="stat-label">Total Test Runs</div>
+                    <div class="stat-bar"><div class="stat-bar-fill purple" style="width: 85%"></div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon orange"><span>🔄</span></div>
+                        <div class="stat-trend running">Live</div>
+                    </div>
+                    <div class="stat-value" id="runningTests">0</div>
+                    <div class="stat-label">Running Now</div>
+                    <div class="stat-bar"><div class="stat-bar-fill orange animate-pulse" style="width: 30%"></div></div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Connected Agents</h3>
+                        <span class="badge" id="agentCount">0</span>
+                    </div>
+                    <div class="card-body" id="agentsList">
+                        <div class="loading-state">
+                            <div class="spinner"></div>
+                            <p>Loading agents...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Activity</h3>
+                        <span class="badge" id="activityCount">0</span>
+                    </div>
+                    <div class="card-body" id="activityList">
+                        <div class="loading-state">
+                            <div class="spinner"></div>
+                            <p>Loading activity...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Quick Start Guide</h3>
+                </div>
+                <div class="card-body">
+                    <div class="quick-start">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Start the Server</h4>
+                                <code>distrunnerserver</code>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Connect an Agent</h4>
+                                <code>distrunner agent --tag="APIAgent" --server="http://localhost:89"</code>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Run Tests</h4>
+                                <code>distrunner runner --tag="APIAgent" --testTechnology="MSTest" --library="Tests.dll"</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agents Page -->
+        <div class="page" id="page-agents">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Test Agents</h3>
+                    <button class="btn btn-sm btn-secondary" onclick="refreshData()">Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Agent ID</th>
+                                <th>Machine</th>
+                                <th>Tag</th>
+                                <th>Status</th>
+                                <th>Last Seen</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agentsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Runs Page -->
+        <div class="page" id="page-runs">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Test Runs</h3>
+                    <button class="btn btn-sm btn-secondary" onclick="refreshData()">Refresh</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Run ID</th>
+                                <th>Status</th>
+                                <th>Assembly</th>
+                                <th>Technology</th>
+                                <th>Started</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="testRunsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Page -->
+        <div class="page" id="page-history">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Test History</h3>
+                </div>
+                <div class="card-body">
+                    <div class="timeline" id="historyTimeline">
+                        <div class="loading-state">
+                            <div class="spinner"></div>
+                            <p>Loading history...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div class="page" id="page-settings">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Server Settings</h3>
+                </div>
+                <div class="card-body">
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label>Server URL</label>
+                            <input type="text" class="form-input" value="http://localhost:89" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Auto-Refresh Interval (seconds)</label>
+                            <input type="number" class="form-input" id="refreshInterval" value="10" min="5" max="60">
+                        </div>
+                        <div class="form-group">
+                            <label>Theme</label>
+                            <select class="form-input" id="themeSelect">
+                                <option value="dark">Dark Mode</option>
+                                <option value="light">Light Mode</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>About DistRunner</h3>
+                </div>
+                <div class="card-body">
+                    <div class="about-info">
+                        <p><strong>Version:</strong> 1.7.15</p>
+                        <p><strong>Platform:</strong> Cross-platform (.NET 8)</p>
+                        <p><strong>License:</strong> Apache 2.0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <span id="lastUpdated">Last updated: --</span>
+            <span>DistRunner v1.7.15</span>
+        </footer>
+    </main>
+
+    <script src="js/app.js?v=5"></script>
+</body>
+</html>
